@@ -1,0 +1,276 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeFlow | Every Drop Matters</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+
+<header class="navbar">
+    <a href="/" class="logo">
+        <span class="logo-icon">♥</span>
+        LifeFlow<span class="dot">.</span>
+    </a>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#camps">Blood Camps</a>
+        <a href="#impact">Our Impact</a>
+    </nav>
+
+    <div class="login-buttons">
+        <a href="{% url 'donor_login' %}" class="donor-login">
+            Donor Login
+        </a>
+
+        <a href="{% url 'organization_login' %}" class="organization-login">Organization Login</a>
+
+    </div>
+</header>
+
+
+<main>
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <span class="eyebrow">♥  GIVE BLOOD. GIVE LIFE.</span>
+
+        <h1>
+            Your One Drop<br>
+            Can <span>Save A Life.</span>
+        </h1>
+
+        <p>
+            Every drop counts. Every donor matters.
+            Join LifeFlow and help connect blood donors
+            with people who need a second chance at life.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="{% url 'donor_awareness' %}" class="btn-primary">
+                Become a Donor →
+            </a>
+            
+            <a href="{% url 'submit_blood_request' %}" class="btn-outline">
+                Request Blood
+            </a>
+            <a href="{% url 'track_blood_request' %}" class="btn-outline">
+        Track Blood Request
+            </a>
+        </div>
+
+        <div class="hero-note">
+            <span>♥</span>
+            Be someone's reason to smile tomorrow.
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <img
+            src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1000&q=85"
+            alt="Blood donation"
+        >
+        <div class="floating-card">
+            <span>♥</span>
+            <div>
+                <strong>Every donation matters</strong>
+                <small>Make a difference today</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="quick-actions" id="donor-registration">
+    <div class="action-card">
+        <div class="action-icon">♥</div>
+        <h3>Become a Donor</h3>
+        <p>Register as a blood donor and help save lives.</p>
+        <a  href="{% url 'donor_awareness' %}" >Explore donor registration →</a>
+    </div>
+
+    <div class="action-card emergency-action" id="blood-request">
+        <div class="action-icon">✚</div>
+        <h3>Need Blood?</h3>
+        <p>Submit a blood request and get connected with potential donors.</p>
+        <a href="#about">Explore blood requests →</a>
+    </div>
+
+    <div class="action-card">
+        <div class="action-icon">✚</div>
+        <h3>Join as an Organization</h3>
+        <p>Hospitals and organizations can partner with LifeFlow.</p>
+        <a href="{% url 'organization_apply' %}">Explore partnership →</a>
+    </div>
+</section>
+
+<section class="emergency-section" id="emergency">
+    <div class="section-heading">
+        <span class="eyebrow">URGENT SUPPORT</span>
+        <h2>Emergency Blood Requests 🚨</h2>
+        <p>Find verified emergency requests and help someone in need.</p>
+    </div>
+
+    <div class="emergency-grid">
+        {% for request in emergency_requests %}
+        <div class="request-card">
+            <div class="request-card-top">
+                <span class="blood-group">{{ request.blood_group }}</span>
+
+                <span class="urgency-badge
+                    {% if request.urgency == 'CRITICAL' %}critical
+                    {% else %}urgent{% endif %}">
+                    {{ request.get_urgency_display }}
+                </span>
+            </div>
+
+            <h3>{{ request.units_required }} Unit(s) Required</h3>
+
+            <p><strong>Hospital:</strong> {{ request.hospital_name }}</p>
+            <p><strong>Location:</strong> {{ request.city }}, {{ request.district }}</p>
+            <p><strong>Component:</strong> {{ request.get_component_display }}</p>
+            {% if request.contact_consent %}
+    <p>
+        <strong>Contact:</strong>
+        <a href="tel:{{ request.bystander_contact }}">
+            {{ request.bystander_contact }}
+        </a>
+    </p>
+
+    {% if request.alternate_contact %}
+        <p>
+            <strong>Alternate:</strong>
+            <a href="tel:{{ request.alternate_contact }}">
+                {{ request.alternate_contact }}
+            </a>
+        </p>
+    {% endif %}
+
+    <a href="tel:{{ request.bystander_contact }}"
+       class="find-donors-btn">
+        ☎ Contact Requester
+    </a>
+{% endif %}
+
+
+            {% if request.required_by %}
+                <p><strong>Required by:</strong> {{ request.required_by|date:"d M Y, h:i A" }}</p>
+            {% endif %}
+
+
+
+            <a
+                href="{% url 'nearby_donors' request.reference_code %}"
+                class="find-donors-btn">
+                Find Nearby Donors →
+            </a>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <span>♥</span>
+            <h3>No verified emergency requests at the moment</h3>
+            <p>Admin-approved emergency requests will appear here.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="impact-section" id="impact">
+    <div class="section-heading">
+        <span class="eyebrow">TOGETHER WE CAN</span>
+        <h2>Our Impact</h2>
+        <p>Every registered donor brings us closer to saving another life.</p>
+    </div>
+
+    <div class="impact-grid">
+        <div class="impact-card">
+            <span>♥</span>
+            <h3>{{ total_donors }}</h3>
+            <p>Registered Donors</p>
+        </div>
+
+        <div class="impact-card">
+            <span>✚</span>
+            <h3>{{ pending_requests }}</h3>
+            <p>Pending Blood Requests</p>
+        </div>
+
+        <div class="impact-card">
+            <span>♡</span>
+            <h3>{{ completed_donations }}</h3>
+            <p>Completed Donations</p>
+        </div>
+
+        <div class="impact-card">
+            <span>⌖</span>
+            <h3>{{ upcoming_camps }}</h3>
+            <p>Upcoming Camps</p>
+        </div>
+    </div>
+</section>
+
+<section class="camp-section" id="camps">
+    <div class="section-heading">
+        <span class="eyebrow">BE A PART OF THE CHANGE</span>
+        <h2>Upcoming Blood Donation Camps</h2>
+        <p>Find a camp near you and make your contribution.</p>
+    </div>
+
+    <div class="camp-grid">
+        {% for camp in camps %}
+        <div class="camp-card">
+            <h3>{{ camp.name }}</h3>
+            <p>{{ camp.location }}</p>
+            <p>{{ camp.date }}</p>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <span>♡</span>
+            <h3>New camps coming soon!</h3>
+            <p>Verified blood donation camp details will be published here.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="about-section" id="about">
+    <span class="eyebrow">ABOUT LIFEFLOW</span>
+    <h2>Technology With A Human Heart.</h2>
+    <p>
+        LifeFlow combines blood donation management and
+        Artificial Intelligence to support intelligent donor
+        matching, donation prediction and blood demand analysis.
+    </p>
+    <div class="about-features">
+        <span>✓ Smart donor matching</span>
+        <span>✓ AI-powered predictions</span>
+        <span>✓ Emergency notifications</span>
+    </div>
+</section>
+
+<section class="quote-section">
+    <span>“</span>
+    <h2>Sometimes being a hero is as simple as donating blood.</h2>
+    <p>One donation. Multiple possibilities. Countless hopes.</p>
+</section>
+
+</main>
+
+<footer>
+    <a href="/" class="logo footer-logo">♥ LifeFlow.</a>
+    <p>Connecting hearts. Saving lives.</p>
+    <a href="/admin/" class="footer-admin">Admin Login</a>
+    <small>© 2026 LifeFlow. All rights reserved.</small>
+</footer>
+
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

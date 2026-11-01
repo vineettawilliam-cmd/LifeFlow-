@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Login | LifeFlow</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #fff0f2, #ffdce3);
+        }
+        .login-card {
+            width: 90%;
+            max-width: 420px;
+            padding: 38px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px #0002;
+        }
+        h1 { text-align: center; color: #c62845; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: #777; margin-bottom: 28px; }
+        label { display: block; font-weight: bold; margin: 18px 0 8px; }
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            border: 0;
+            border-radius: 8px;
+            background: #c62845;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover { background: #a91e38; }
+        .error { color: #c62845; text-align: center; }
+        .links { text-align: center; margin-top: 22px; }
+        a { color: #c62845; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="login-card">
+    <h1>LifeFlow</h1>
+    <p class="subtitle">Donor Login</p>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+    <form method="POST" autocomplete="off">
+    {% csrf_token %}
+
+    <label for="username">Username</label>
+    <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="Enter your username"
+        autocomplete="off"
+        value=""
+        required
+    >
+
+    <label for="password">Password</label>
+    <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter your password"
+        autocomplete="new-password"
+        value=""
+        required
+    >
+
+    <button type="submit">Login to Dashboard</button>
+</form>
+
+    <div class="links">
+        <p>New donor? <a href="{% url 'donor_awareness' %}">Register here</a></p>
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+</body>
+</html>

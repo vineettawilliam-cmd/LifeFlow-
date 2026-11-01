@@ -1,0 +1,209 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard | LifeFlow</title>
+    <link rel="stylesheet" href="{% static 'css/donor_dashboard.css' %}">
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <h2 class="logo">LifeFlow<span>.</span></h2>
+        <p class="sidebar-label">DONOR PORTAL</p>
+
+        <a class="active" href="{% url 'donor_dashboard' %}">▦ Dashboard</a>
+        <a href="{% url 'donor_profile' %}">♙ My Profile</a>
+        <a href="#availability">♥ Availability</a>
+        <a href="{% url 'donation_history' %}">Donation History</a>
+        <a href="#alerts">⚑ Emergency Alerts</a>
+        <a href="{% url 'donor_notifications' %}">Notifications</a>
+        <a href="#camps">▣ Blood Camps</a>
+        <a href="#ai-insights">✧ AI Insights</a>
+        <a href="{% url 'password_change' %}">⚿ Change Password</a>
+
+        <form method="POST" action="{% url 'donor_logout' %}">
+            {% csrf_token %}
+            <button class="logout" type="submit">↪ Logout</button>
+        </form>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h2>Donor Dashboard</h2>
+                <p>Your contribution can save lives.</p>
+            </div>
+
+            <button id="themeToggle" class="theme-button" type="button">
+                🌙 Dark Mode
+            </button>
+        </header>
+
+        <section class="welcome">
+            <div>
+                <p class="eyebrow">WELCOME BACK</p>
+                <h1>Hello, {{ donor.full_name }}!</h1>
+                <p>Thank you for being a LifeFlow donor.</p>
+            </div>
+            {% if donor.profile_photo %}
+                <img class="avatar" src="{{ donor.profile_photo.url }}" alt="Profile photo">
+            {% else %}
+                <div class="avatar placeholder">♥</div>
+            {% endif %}
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <span>Blood Group</span>
+                <strong>{{ donor.blood_group }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Age</span>
+                <strong>{{ donor.age }} years</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Verified Donations</span>
+                <strong>{{ total_donations }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Unread Notifications</span>
+                <strong>{{ unread_notifications }}</strong>
+            </div>
+        </section>
+
+        <section class="panel" id="availability">
+            <div class="panel-heading">
+                <div>
+                    <h2>Donation Availability</h2>
+                    <p>Update whether you are currently available to donate.</p>
+                </div>
+                <span class="status {% if donor.availability == 'YES' %}available{% else %}unavailable{% endif %}">
+                    {{ donor.get_availability_display }}
+                </span>
+            </div>
+
+            <form method="POST" action="{% url 'donor_update_availability' %}">
+                {% csrf_token %}
+                <select name="availability">
+                    <option value="YES" {% if donor.availability == 'YES' %}selected{% endif %}>Available</option>
+                    <option value="NO" {% if donor.availability == 'NO' %}selected{% endif %}>Not Available</option>
+                </select>
+                <button class="primary-button" type="submit">Update Availability</button>
+            </form>
+
+            <p class="small-note">
+                Availability does not confirm medical eligibility. Eligibility must be assessed by qualified medical personnel.
+            </p>
+        </section>
+
+        <section class="panel" id="history">
+            <div class="panel-heading">
+                <div>
+                    <h2>Recent Donation History</h2>
+                    <p>Your administrator-verified donations.</p>
+                </div>
+            </div>
+
+            {% for donation in recent_donations %}
+                <div class="list-item">
+                    <div>
+                        <strong>{{ donation.hospital_name }}</strong>
+                        <p>{{ donation.city }} · {{ donation.donation_date }}</p>
+                    </div>
+                    <span class="verified">Verified</span>
+                </div>
+            {% empty %}
+                <p class="empty">No verified donations recorded yet.</p>
+            {% endfor %}
+        </section>
+
+        <section class="panel" id="notifications">
+            <div class="panel-heading">
+                <div>
+                    <h2>Recent Notifications</h2>
+                    <p>Updates related to your donor account.</p>
+                </div>
+            </div>
+
+            {% for notification in recent_notifications %}
+                <div class="list-item">
+                    <div>
+                        <strong>{{ notification.title }}</strong>
+                        <p>{{ notification.message }}</p>
+                        <small>{{ notification.created_at|date:"d M Y, h:i A" }}</small>
+                    </div>
+                    {% if not notification.is_read %}
+                        <span class="new-label">NEW</span>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="empty">You have no notifications.</p>
+            {% endfor %}
+        </section>
+
+        <section class="feature-grid">
+            <a class="feature-card" id="alerts" href="#alerts">
+                <span>⚑</span>
+                <h3>Emergency Alerts</h3>
+                <p>Matching emergency requests will appear here.</p>
+            </a>
+
+            <a class="feature-card" id="camps" href="#camps">
+                <span>▣</span>
+                <h3>Blood Donation Camps</h3>
+                <p>Verified upcoming camps will appear here.</p>
+            </a>
+
+            <a class="feature-card" id="ai-insights" href="#ai-insights">
+                <span>✧</span>
+                <h3>AI Donor Insights</h3>
+                <p>Donor engagement predictions will be connected to the trained ML model.</p>
+            </a>
+        </section>
+
+        <section class="panel">
+            <h2>Quick Actions</h2>
+            <div class="actions">
+                <a class="primary-button" href="{% url 'donor_profile' %}">View My Profile</a>
+                <a class="secondary-button" href="{% url 'donor_edit_profile' %}">Edit Profile</a>
+            </div>
+        </section>
+
+        <footer>LifeFlow · Every drop matters.</footer>
+
+    </main>
+</div>
+
+<script>
+    const themeToggle = document.getElementById('themeToggle');
+
+    if (localStorage.getItem('lifeflow-theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggle.textContent = '☀️ Light Mode';
+    }
+
+    themeToggle.addEventListener('click', function () {
+        document.body.classList.toggle('dark-mode');
+
+        const isDark = document.body.classList.contains('dark-mode');
+
+        localStorage.setItem(
+            'lifeflow-theme',
+            isDark ? 'dark' : 'light'
+        );
+
+        themeToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+</script>
+
+</body>
+</html>

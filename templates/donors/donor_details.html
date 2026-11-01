@@ -1,0 +1,481 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Registration | LifeFlow</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        body {
+            margin: 0;
+            background: #fff5f5;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .registration-wrapper {
+            max-width: 950px;
+            margin: 45px auto;
+            padding: 20px;
+        }
+
+        .registration-card {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
+
+        .registration-card h1 {
+            color: #c82333;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #c82333;
+            border-bottom: 1px solid #f2d5d8;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .field-error {
+            color: #c82333;
+            font-size: 13px;
+        }
+
+        .consent-box {
+            background: #fff7f7;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .consent-box label {
+            display: block;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        .consent-box input {
+            margin-right: 8px;
+        }
+
+        .submit-button {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 9px;
+            background: #dc3545;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background: #b92332;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            color: #c82333;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        @media(max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .registration-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="registration-wrapper">
+    <div class="registration-card">
+
+        <h1>Become a LifeSaver ❤️</h1>
+        <p class="subtitle">
+            Complete your donor profile to continue with LifeFlow registration.
+        </p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="field-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <h3 class="section-title">1. Personal Information</h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    {{ form.full_name }}
+                    {{ form.full_name.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth *</label>
+                    {{ form.date_of_birth }}
+                    {{ form.date_of_birth.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>Calculated Age</label>
+                    <input type="text" id="calculated_age"
+                           placeholder="Automatically calculated" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender *</label>
+                    {{ form.gender }}
+                    {{ form.gender.errors }}
+                </div>
+
+                <div class="form-group full">
+                    <label>Profile Photo (Optional)</label>
+                    {{ form.profile_photo }}
+                    {{ form.profile_photo.errors }}
+                </div>
+
+            </div>
+
+            <h3 class="section-title">2. Contact Information</h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile Number *</label>
+                    {{ form.mobile_number }}
+                    {{ form.mobile_number.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>Alternate Number</label>
+                    {{ form.alternate_number }}
+                    {{ form.alternate_number.errors }}
+                </div>
+
+            </div>
+
+            
+            <h3 class="section-title">3. Location Details</h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>State / Union Territory *</label>
+                    <select name="state" id="state" required>
+                        <option value="">Select State / UT</option>
+                    </select>
+                    {{ form.state.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>District *</label>
+                    <select name="district" id="district" required disabled>
+                        <option value="">Select District</option>
+                    </select>
+                    {{ form.district.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>City / Town *</label>
+                    <input type="text" name="city" id="city"
+                        value="{{ form.city.value|default:'' }}"
+                        placeholder="Enter your city or town" required>
+                    {{ form.city.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>PIN Code *</label>
+                    {{ form.pin_code }}
+                    {{ form.pin_code.errors }}
+                </div>
+
+                <div class="form-group full">
+                    <label>Full Address *</label>
+                    {{ form.address }}
+                    {{ form.address.errors }}
+                </div>
+
+            </div>
+
+
+            <h3 class="section-title">4. Blood Donation Information</h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Blood Group *</label>
+                    {{ form.blood_group }}
+                    {{ form.blood_group.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>Last Donation Date</label>
+                    {{ form.last_donation_date }}
+                    {{ form.last_donation_date.errors }}
+                    <span class="help-text">
+                        Leave blank if you have never donated.
+                    </span>
+                </div>
+
+            </div>
+
+            <h3 class="section-title">5. Availability & Preferences</h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Donation Availability *</label>
+                    {{ form.availability }}
+                    {{ form.availability.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Donation Time *</label>
+                    {{ form.preferred_time }}
+                    {{ form.preferred_time.errors }}
+                </div>
+
+            </div>
+
+            <div class="consent-box">
+                <h3 style="color:#c82333;">6. Declarations & Consent</h3>
+
+                <label>
+                    {{ form.information_consent }}
+                    I confirm that the information provided is accurate.
+                    {{ form.information_consent.errors }}
+                </label>
+
+                <label>
+                    {{ form.contact_consent }}
+                    I consent to being contacted about relevant blood
+                    donation opportunities and requests.
+                    {{ form.contact_consent.errors }}
+                </label>
+
+                <label>
+                    {{ form.emergency_willingness }}
+                    I am willing to receive notifications about emergency
+                    blood donation requests.
+                    {{ form.emergency_willingness.errors }}
+                </label>
+            </div>
+
+            <button type="submit" class="submit-button">
+                Save Donor Details →
+            </button>
+
+        </form>
+
+        <a href="{% url 'donor_awareness' %}" class="back-link">
+            ← Back to Awareness Page
+        </a>
+
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // -------------------------------
+    // 1. Calculate Donor Age
+    // -------------------------------
+
+    const dobInput = document.getElementById('id_date_of_birth');
+    const ageInput = document.getElementById('calculated_age');
+
+    function calculateAge() {
+        if (!dobInput || !ageInput) return;
+
+        if (!dobInput.value) {
+            ageInput.value = '';
+            return;
+        }
+
+        const dob = new Date(dobInput.value + 'T00:00:00');
+        const today = new Date();
+
+        let age = today.getFullYear() - dob.getFullYear();
+
+        const monthDifference = today.getMonth() - dob.getMonth();
+
+        if (
+            monthDifference < 0 ||
+            (monthDifference === 0 && today.getDate() < dob.getDate())
+        ) {
+            age--;
+        }
+
+        ageInput.value = age >= 0 ? age + ' years' : 'Invalid date';
+    }
+
+    if (dobInput) {
+        dobInput.addEventListener('change', calculateAge);
+        calculateAge();
+    }
+
+
+    // -------------------------------
+    // 2. India State and District Dropdowns
+    // -------------------------------
+
+    const stateSelect = document.getElementById('state');
+    const districtSelect = document.getElementById('district');
+
+    if (!stateSelect || !districtSelect) {
+        console.error('State or District dropdown not found!');
+        return;
+    }
+
+    const locationDataUrl =
+        "{% static 'data/india_states_district.json' %}";
+
+    async function loadIndiaLocations() {
+        try {
+            const response = await fetch(locationDataUrl);
+
+            if (!response.ok) {
+                throw new Error('HTTP Error: ' + response.status);
+            }
+
+            const data = await response.json();
+            const states = data.states || [];
+
+            console.log('States loaded:', states.length);
+
+            if (states.length === 0) {
+                throw new Error('No states found in JSON file.');
+            }
+
+            // Load all states
+            states.forEach(function (item) {
+                const option = document.createElement('option');
+
+                option.value = item.state;
+                option.textContent = item.state;
+
+                stateSelect.appendChild(option);
+            });
+
+            // Load districts when a state is selected
+            stateSelect.addEventListener('change', function () {
+
+                districtSelect.innerHTML =
+                    '<option value="">Select District</option>';
+
+                districtSelect.disabled = true;
+
+                const selectedState = states.find(
+                    item => item.state === this.value
+                );
+
+                if (!selectedState) return;
+
+                selectedState.districts.forEach(function (district) {
+                    const option = document.createElement('option');
+
+                    option.value = district;
+                    option.textContent = district;
+
+                    districtSelect.appendChild(option);
+                });
+
+                districtSelect.disabled = false;
+
+                console.log(
+                    'Districts loaded:',
+                    selectedState.districts.length
+                );
+            });
+
+        } catch (error) {
+            console.error('Location loading error:', error);
+            alert('Unable to load states and districts. Please refresh the page.');
+        }
+    }
+
+    loadIndiaLocations();
+
+});
+</script>
+
+</body>
+</html>

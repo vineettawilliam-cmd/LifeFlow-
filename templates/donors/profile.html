@@ -1,0 +1,317 @@
+
+{% load static %}
+
+<style>
+.profile-page {
+    max-width: 1050px;
+    margin: 35px auto;
+    padding: 20px;
+    color: #292d36;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, #a80032, #ed4264);
+    color: white;
+    padding: 35px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    box-shadow: 0 8px 25px rgba(168, 0, 50, 0.18);
+}
+
+.profile-photo {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    background: #fff;
+}
+
+.profile-placeholder {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    background: white;
+    color: #b00035;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 43px;
+    font-weight: bold;
+}
+
+.profile-header h1 {
+    margin: 0 0 8px;
+    font-size: 29px;
+}
+
+.profile-header p {
+    margin: 5px 0;
+    opacity: .9;
+}
+
+.blood-badge {
+    margin-left: auto;
+    background: white;
+    color: #b00035;
+    padding: 17px 22px;
+    border-radius: 16px;
+    text-align: center;
+    min-width: 85px;
+}
+
+.blood-badge strong {
+    display: block;
+    font-size: 30px;
+}
+
+.blood-badge span {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin: 22px 0;
+    flex-wrap: wrap;
+}
+
+.profile-btn {
+    padding: 11px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    background: #b00035;
+    color: white;
+}
+
+.profile-btn.secondary {
+    background: #f3e8ec;
+    color: #a00030;
+}
+
+.profile-section {
+    background: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 17px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    border: 1px solid #f1e7ea;
+}
+
+.profile-section h2 {
+    font-size: 19px;
+    color: #a80032;
+    margin: 0 0 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0dce2;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.info-item small {
+    display: block;
+    color: #858995;
+    margin-bottom: 6px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.info-item strong {
+    display: block;
+    font-size: 15px;
+    color: #30333b;
+    overflow-wrap: anywhere;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status.yes {
+    background: #e0f7e9;
+    color: #168344;
+}
+
+.status.no {
+    background: #ffe5e8;
+    color: #c02b42;
+}
+
+@media(max-width: 650px) {
+    .profile-page { padding: 12px; }
+    .profile-header { padding: 25px; }
+    .blood-badge { margin-left: 0; }
+    .info-grid { grid-template-columns: 1fr; }
+    .profile-section { padding: 20px; }
+}
+</style>
+
+<div class="profile-page">
+
+    <div class="profile-header">
+
+        {% if donor.profile_photo %}
+            <img src="{{ donor.profile_photo.url }}"
+                 class="profile-photo" alt="Donor photo">
+        {% else %}
+            <div class="profile-placeholder">
+                {{ donor.full_name|first|upper }}
+            </div>
+        {% endif %}
+
+        <div>
+            <h1>{{ donor.full_name }}</h1>
+            <p>LifeFlow Registered Donor</p>
+            <p>📍 {{ donor.city }}, {{ donor.district }}</p>
+        </div>
+
+        <div class="blood-badge">
+            <strong>{{ donor.blood_group }}</strong>
+            <span>BLOOD GROUP</span>
+        </div>
+
+    </div>
+
+    <div class="profile-actions">
+        <a href="{% url 'donor_dashboard' %}" class="profile-btn secondary">
+            ← Dashboard
+        </a>
+        <a href="{% url 'donor_edit_profile' %}" class="profile-btn">
+            ✎ Edit Profile
+        </a>
+    </div>
+
+    <div class="profile-section">
+        <h2>👤 Personal Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <small>Full Name</small>
+                <strong>{{ donor.full_name }}</strong>
+            </div>
+            <div class="info-item">
+                <small>Date of Birth</small>
+                <strong>{{ donor.date_of_birth|date:"d M Y" }}</strong>
+            </div>
+            <div class="info-item">
+                <small>Age</small>
+                <strong>{{ donor.age }} years</strong>
+            </div>
+            <div class="info-item">
+                <small>Gender</small>
+                <strong>{{ donor.get_gender_display }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h2>📞 Contact Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <small>Email Address</small>
+                <strong>{{ donor.email }}</strong>
+            </div>
+            <div class="info-item">
+                <small>Mobile Number</small>
+                <strong>{{ donor.mobile_number }}</strong>
+            </div>
+            <div class="info-item">
+                <small>Alternate Number</small>
+                <strong>{{ donor.alternate_number|default:"Not provided" }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h2>📍 Address Details</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <small>State</small>
+                <strong>{{ donor.state }}</strong>
+            </div>
+            <div class="info-item">
+                <small>District</small>
+                <strong>{{ donor.district }}</strong>
+            </div>
+            <div class="info-item">
+                <small>City</small>
+                <strong>{{ donor.city }}</strong>
+            </div>
+            <div class="info-item">
+                <small>PIN Code</small>
+                <strong>{{ donor.pin_code }}</strong>
+            </div>
+            <div class="info-item">
+                <small>Full Address</small>
+                <strong>{{ donor.address }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h2>🩸 Donation Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <small>Blood Group</small>
+                <strong>{{ donor.blood_group }}</strong>
+            </div>
+            <div class="info-item">
+                <small>Last Donation Date</small>
+                <strong>
+                    {% if donor.last_donation_date %}
+                        {{ donor.last_donation_date|date:"d M Y" }}
+                    {% else %}
+                        No previous donation recorded
+                    {% endif %}
+                </strong>
+            </div>
+            <div class="info-item">
+                <small>Preferred Donation Time</small>
+                <strong>{{ donor.get_preferred_time_display }}</strong>
+            </div>
+            <div class="info-item">
+                <small>Availability</small>
+                {% if donor.availability == "YES" %}
+                    <span class="status yes">Available</span>
+                {% else %}
+                    <span class="status no">Not Available</span>
+                {% endif %}
+            </div>
+            <div class="info-item">
+                <small>Emergency Donation</small>
+                <strong>
+                    {% if donor.emergency_willingness %}
+                        Willing to Help
+                    {% else %}
+                        Not opted in
+                    {% endif %}
+                </strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h2>❤️ Thank You for Being a Donor</h2>
+        <p style="color:#777; line-height:1.7; margin:0;">
+            Your willingness to donate blood can make a meaningful
+            difference in someone's life. Thank you for being part
+            of the LifeFlow community.
+        </p>
+    </div>
+
+</div>
+

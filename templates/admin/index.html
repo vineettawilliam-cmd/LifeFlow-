@@ -1,0 +1,287 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    .lf-dashboard {
+        padding: 10px 5px 25px;
+    }
+
+    .lf-heading {
+        font-size: 25px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--body-fg, #333);
+    }
+
+    .lf-subtitle {
+        color: var(--body-quiet-color, #777);
+        margin-bottom: 25px;
+    }
+
+    .lf-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .lf-stat-card {
+        background: var(--body-bg, #fff);
+        border-radius: 12px;
+        padding: 22px;
+        border-left: 5px solid #dc3545;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+        min-height: 115px;
+    }
+
+    .lf-stat-card.blue {
+        border-left-color: #3498db;
+    }
+
+    .lf-stat-card.green {
+        border-left-color: #28a745;
+    }
+
+    .lf-stat-card.orange {
+        border-left-color: #f39c12;
+    }
+
+    .lf-stat-card.purple {
+        border-left-color: #8e44ad;
+    }
+
+    .lf-stat-label {
+        font-size: 14px;
+        color: var(--body-quiet-color, #777);
+        margin-bottom: 12px;
+    }
+
+    .lf-stat-number {
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--body-fg, #333);
+    }
+
+    .lf-section-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 25px 0 15px;
+        color: var(--body-fg, #333);
+    }
+
+    .lf-quick-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .lf-quick-link {
+        display: block;
+        padding: 18px;
+        background: var(--body-bg, #fff);
+        border-radius: 10px;
+        border: 1px solid var(--border-color, #ddd);
+        color: var(--body-fg, #333) !important;
+        text-decoration: none !important;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .lf-quick-link:hover {
+        border-color: #dc3545;
+        transform: translateY(-3px);
+    }
+
+    .lf-quick-link span {
+        display: block;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--body-quiet-color, #777);
+        margin-top: 6px;
+    }
+
+    .lf-app-section {
+        background: var(--body-bg, #fff);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .lf-app-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+    }
+
+    .lf-app-card {
+        border: 1px solid var(--border-color, #ddd);
+        border-radius: 10px;
+        padding: 16px;
+    }
+
+    .lf-app-card h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .lf-app-card ul {
+        padding-left: 18px;
+        margin-bottom: 0;
+    }
+
+    .lf-app-card li {
+        margin: 8px 0;
+    }
+
+    .lf-app-card a {
+        color: var(--link-fg, #dc3545);
+    }
+
+    @media (max-width: 600px) {
+        .lf-stat-number {
+            font-size: 25px;
+        }
+    }
+</style>
+
+<div class="lf-dashboard">
+
+    <h1 class="lf-heading">LifeFlow Dashboard</h1>
+    <p class="lf-subtitle">
+        Blood Donation Management and Administration Overview
+    </p>
+
+    <!-- Statistics -->
+
+    <div class="lf-stats-grid">
+
+        <div class="lf-stat-card">
+            <div class="lf-stat-label">Total Donors</div>
+            <div class="lf-stat-number">{{ total_donors }}</div>
+        </div>
+
+        <div class="lf-stat-card green">
+            <div class="lf-stat-label">Available Donors</div>
+            <div class="lf-stat-number">{{ available_donors }}</div>
+        </div>
+
+        <div class="lf-stat-card blue">
+            <div class="lf-stat-label">Registered Users</div>
+            <div class="lf-stat-number">{{ total_users }}</div>
+        </div>
+
+        <div class="lf-stat-card orange">
+            <div class="lf-stat-label">Pending Blood Requests</div>
+            <div class="lf-stat-number">{{ pending_requests }}</div>
+        </div>
+
+        <div class="lf-stat-card">
+            <div class="lf-stat-label">Verified Blood Requests</div>
+            <div class="lf-stat-number">{{ verified_requests }}</div>
+        </div>
+
+        <div class="lf-stat-card orange">
+            <div class="lf-stat-label">Pending Emergency Requests</div>
+            <div class="lf-stat-number">{{ emergency_requests }}</div>
+        </div>
+
+        <div class="lf-stat-card green">
+            <div class="lf-stat-label">Completed Blood Requests</div>
+            <div class="lf-stat-number">{{ completed_requests }}</div>
+        </div>
+
+        <div class="lf-stat-card purple">
+            <div class="lf-stat-label">Verified Donations</div>
+            <div class="lf-stat-number">{{ verified_donations }}</div>
+        </div>
+
+        <div class="lf-stat-card blue">
+            <div class="lf-stat-label">Donor Responses</div>
+            <div class="lf-stat-number">{{ total_responses }}</div>
+        </div>
+
+    </div>
+
+    <!-- Quick Management Links -->
+
+    <h2 class="lf-section-title">Quick Management</h2>
+
+    <div class="lf-quick-links">
+
+        <a class="lf-quick-link"
+   href="{% url 'ml_analytics' %}">
+    ML & Dataset Analytics
+    <span>Explore dataset graphs, model comparison and AI evaluation results</span>
+</a>
+
+        <a class="lf-quick-link"
+           href="{% url 'admin:requests_app_bloodrequest_changelist' %}">
+            Blood Requests
+            <span>Verify, approve and reject requests</span>
+        </a>
+
+        <a class="lf-quick-link"
+           href="{% url 'admin:donors_donationrecord_changelist' %}">
+            Donation Records
+            <span>Review and verify donations</span>
+        </a>
+
+        <a class="lf-quick-link"
+           href="{% url 'admin:requests_app_donorresponse_changelist' %}">
+            Donor Responses
+            <span>Track donor responses to requests</span>
+        </a>
+
+        <a class="lf-quick-link"
+           href="{% url 'admin:donors_donornotification_changelist' %}">
+            Notifications
+            <span>View donor notification records</span>
+        </a>
+
+        <a class="lf-quick-link"
+           href="{% url 'admin:accounts_customuser_changelist' %}">
+            Manage Users
+            <span>Review user roles and approval status</span>
+        </a>
+
+    </div>
+
+    <!-- Existing Django Admin Applications -->
+
+    <h2 class="lf-section-title">All Administration Modules</h2>
+
+    <div class="lf-app-section">
+        <div class="lf-app-grid">
+
+            {% for app in app_list %}
+                <div class="lf-app-card">
+                    <h3>{{ app.name }}</h3>
+
+                    <ul>
+                        {% for model in app.models %}
+                            <li>
+                                {% if model.admin_url %}
+                                    <a href="{{ model.admin_url }}">
+                                        {{ model.name }}
+                                    </a>
+                                {% else %}
+                                    {{ model.name }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% empty %}
+                <p>No administration modules are available.</p>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

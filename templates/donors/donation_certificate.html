@@ -1,0 +1,215 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Certificate | LifeFlow</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            background: #f2edef;
+            font-family: Georgia, serif;
+        }
+
+        .certificate {
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 12px;
+            background: white;
+            border: 7px double #b00035;
+            box-shadow: 0 8px 30px rgba(0,0,0,.1);
+        }
+
+        .inner {
+            border: 1px solid #e5b6c4;
+            padding: 50px 35px;
+            text-align: center;
+        }
+
+        .logo {
+            color: #b00035;
+            font-family: Arial, sans-serif;
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .heart {
+            font-size: 40px;
+            margin: 15px 0;
+        }
+
+        h1 {
+            color: #a00030;
+            font-size: 34px;
+            letter-spacing: 2px;
+            margin: 15px 0;
+        }
+
+        .subtitle {
+            color: #777;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        .presented {
+            margin-top: 35px;
+            color: #666;
+            font-size: 17px;
+        }
+
+        .name {
+            font-size: 32px;
+            color: #a00030;
+            font-weight: bold;
+            margin: 20px 0;
+            border-bottom: 1px solid #d9a5b5;
+            display: inline-block;
+            padding: 0 25px 12px;
+        }
+
+        .message {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #555;
+            max-width: 650px;
+            margin: 20px auto;
+        }
+
+        .details {
+            background: #fff5f7;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 550px;
+            font-family: Arial, sans-serif;
+            line-height: 2;
+            color: #444;
+        }
+
+        .footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .footer div {
+            border-top: 1px solid #aaa;
+            padding-top: 10px;
+            min-width: 150px;
+        }
+
+        .actions {
+            text-align: center;
+            margin: 25px;
+        }
+
+        .actions button,
+        .actions a {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #b00035;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        @media(max-width: 600px) {
+            .inner { padding: 30px 15px; }
+            h1 { font-size: 25px; }
+            .name { font-size: 24px; }
+            .footer { flex-direction: column; align-items: center; }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .certificate {
+                box-shadow: none;
+                margin: 0 auto;
+                max-width: none;
+                width: 100%;
+                break-inside: avoid;
+            }
+
+            .actions {
+                display: none;
+            }
+
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="certificate">
+    <div class="inner">
+
+        <div class="logo">❤️ LIFEFLOW</div>
+        <div class="subtitle">BLOOD DONATION COMMUNITY</div>
+
+        <div class="heart">🩸</div>
+
+        <h1>DONATION CERTIFICATE</h1>
+
+        <p class="presented">This certificate is presented to</p>
+
+        <div class="name">{{ donor.full_name }}</div>
+
+        <p class="message">
+            In recognition of your voluntary blood donation and
+            your contribution towards supporting people in need.
+            Your kindness and willingness to help make a difference
+            in our community.
+        </p>
+
+        <div class="details">
+            <strong>Blood Group:</strong> {{ donor.blood_group }}<br>
+            <strong>Donation Date:</strong> {{ donation.donation_date|date:"d F Y" }}<br>
+            <strong>Hospital / Centre:</strong> {{ donation.hospital_name }}<br>
+            <strong>City:</strong> {{ donation.city }}<br>
+            <strong>Certificate ID:</strong> LF-DON-{{ donation.id|stringformat:"05d" }}
+        </div>
+
+        <p style="color:#a00030; font-style:italic;">
+            "Donate Blood, Share Life."
+        </p>
+
+        <div class="footer">
+            <div>LifeFlow Administration</div>
+            <div>Verified Donation Record</div>
+        </div>
+
+    </div>
+</div>
+
+<div class="actions">
+    <button onclick="window.print()">🖨 Print / Save as PDF</button>
+    <a href="{% url 'donation_history' %}">← Back to History</a>
+</div>
+
+</body>
+</html>

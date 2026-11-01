@@ -1,0 +1,202 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Awareness | LifeFlow</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        .awareness-wrapper {
+            min-height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 20px;
+            background: #fff5f5;
+        }
+
+        .awareness-card {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 8px 35px rgba(0,0,0,0.08);
+        }
+
+        .awareness-icon {
+            font-size: 45px;
+            text-align: center;
+        }
+
+        .awareness-card h1 {
+            text-align: center;
+            color: #c82333;
+            margin: 12px 0;
+        }
+
+        .awareness-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .awareness-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #fff7f7;
+            border-radius: 12px;
+        }
+
+        .awareness-section h3 {
+            color: #c82333;
+            margin-bottom: 12px;
+        }
+
+        .awareness-section li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .declaration {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 18px 0;
+            line-height: 1.6;
+        }
+
+        .declaration input {
+            margin-top: 5px;
+            accent-color: #dc3545;
+            width: 17px;
+            height: 17px;
+        }
+
+        .continue-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 9px;
+            background: #dc3545;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+
+        .continue-button:hover {
+            background: #b92332;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #c82333;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: #b42318;
+            background: #fff0f0;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        @media(max-width: 600px) {
+            .awareness-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="awareness-wrapper">
+    <div class="awareness-card">
+
+        <div class="awareness-icon">❤️</div>
+
+        <h1>Before You Become a Lifesaver</h1>
+
+        <p class="awareness-subtitle">
+            Every blood donation can help save a life.
+            Please read the following information before registering.
+        </p>
+
+        <div class="awareness-section">
+            <h3>Why Donate Blood?</h3>
+            <ul>
+                <li>Blood donation can help patients during accidents, surgeries and emergencies.</li>
+                <li>Donated blood supports patients with different medical conditions.</li>
+                <li>Eligible donors can donate regularly following appropriate medical guidance.</li>
+            </ul>
+        </div>
+
+        <div class="awareness-section">
+            <h3>Important Information</h3>
+            <ul>
+                <li>Blood donation must be performed at an authorized blood donation centre.</li>
+                <li>Your eligibility will be assessed by qualified medical professionals.</li>
+                <li>Do not donate if you are unwell or have been advised against donating.</li>
+                <li>Always provide accurate personal and medical information.</li>
+                <li>Your contact information should be handled according to the platform's privacy practices.</li>
+            </ul>
+        </div>
+
+        <div class="awareness-section">
+            <h3>Your Acknowledgement</h3>
+
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <label class="declaration">
+                    <input type="checkbox"
+                           name="read_awareness"
+                           value="yes"
+                           required>
+                    <span>
+                        I have read and understood the blood donation awareness information.
+                    </span>
+                </label>
+
+                <label class="declaration">
+                    <input type="checkbox"
+                           name="understand_eligibility"
+                           value="yes"
+                           required>
+                    <span>
+                        I understand that registration does not automatically make me
+                        medically eligible to donate blood. My eligibility must be
+                        assessed by qualified medical professionals.
+                    </span>
+                </label>
+
+                <button type="submit" class="continue-button">
+                    I Agree – Continue to Registration →
+                </button>
+            </form>
+        </div>
+
+        <p style="text-align:center; color:#777;">
+            Your contribution could become someone's second chance at life.
+        </p>
+
+        <a href="/" class="back-link">← Back to Home</a>
+
+    </div>
+</div>
+
+</body>
+</html>

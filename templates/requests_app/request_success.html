@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Request Submitted | LifeFlow</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: #fff5f5;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .card {
+            background: white;
+            width: min(90%, 480px);
+            padding: 35px;
+            text-align: center;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px #00000012;
+        }
+        .check { font-size: 55px; color: #2e9d61; }
+        h1 { color: #c62828; }
+        .reference {
+            background: #fff0f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+            font-weight: bold;
+        }
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 20px;
+            border-radius: 7px;
+            background: #c62828;
+            color: white;
+            text-decoration: none;
+        }
+        .secondary { background: #555; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="check">✓</div>
+        <h1>Request Submitted!</h1>
+        <p>Your blood request has been received successfully.</p>
+        <p>It is currently awaiting admin verification.</p>
+
+        <p>Your reference code:</p>
+        <div class="reference">{{ reference_code }}</div>
+
+        <p>Please save this code for future reference. It is not a public tracking password.</p>
+
+        <a href="/">Back to Home</a>
+        <a class="secondary" href="{% url 'submit_blood_request' %}">New Request</a>
+    </div>
+</body>
+</html>

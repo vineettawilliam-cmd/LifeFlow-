@@ -1,0 +1,108 @@
+{% extends 'accounts/organization_base.html' %}
+{% block title %}Organization Application | LifeFlow{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <span class="eyebrow">Partner with LifeFlow</span>
+    <h1>Organization Registration</h1>
+    <p class="subtitle">Hospitals, blood banks, NGOs and camp organizers can apply to become verified LifeFlow partners.</p>
+</div>
+
+<div class="panel">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div class="form-grid">
+            <div class="section-title">Organization Details</div>
+
+            <div class="field">
+                <label for="{{ form.organization_name.id_for_label }}">Organization Name</label>
+                {{ form.organization_name }}{{ form.organization_name.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.organization_type.id_for_label }}">Organization Type</label>
+                {{ form.organization_type }}{{ form.organization_type.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.registration_number.id_for_label }}">Registration Number (if available)</label>
+                {{ form.registration_number }}{{ form.registration_number.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.email.id_for_label }}">Official Email</label>
+                {{ form.email }}{{ form.email.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.phone.id_for_label }}">Official Phone</label>
+                {{ form.phone }}{{ form.phone.errors }}
+            </div>
+
+            <div class="section-title">Location Details</div>
+            <div class="field">
+                <label for="{{ form.state.id_for_label }}">State</label>
+                {{ form.state }}{{ form.state.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.district.id_for_label }}">District</label>
+                {{ form.district }}{{ form.district.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.city.id_for_label }}">City / Town</label>
+                {{ form.city }}{{ form.city.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.pin_code.id_for_label }}">PIN Code</label>
+                {{ form.pin_code }}{{ form.pin_code.errors }}
+            </div>
+            <div class="field full">
+                <label for="{{ form.address.id_for_label }}">Full Address</label>
+                {{ form.address }}{{ form.address.errors }}
+            </div>
+
+            <div class="section-title">Authorized Representative</div>
+            <div class="field">
+                <label for="{{ form.representative_name.id_for_label }}">Representative Name</label>
+                {{ form.representative_name }}{{ form.representative_name.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.representative_designation.id_for_label }}">Designation</label>
+                {{ form.representative_designation }}{{ form.representative_designation.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.representative_phone.id_for_label }}">Representative Phone</label>
+                {{ form.representative_phone }}{{ form.representative_phone.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ form.representative_email.id_for_label }}">Representative Email</label>
+                {{ form.representative_email }}{{ form.representative_email.errors }}
+            </div>
+
+            <div class="section-title">Access Permissions Requested</div>
+            <div class="field full check-row">
+                {{ form.request_blood_permission }}
+                <label for="{{ form.request_blood_permission.id_for_label }}">We request permission to submit and manage blood requests.</label>
+            </div>
+            <div class="field full check-row">
+                {{ form.submit_camp_permission }}
+                <label for="{{ form.submit_camp_permission.id_for_label }}">We request permission to submit blood donation camp details.</label>
+            </div>
+            <div class="field full">
+                <label for="{{ form.supporting_document.id_for_label }}">Supporting Document (optional)</label>
+                {{ form.supporting_document }}
+                <p class="help">Upload an organization registration certificate or other supporting document.</p>
+                {{ form.supporting_document.errors }}
+            </div>
+            <div class="field full check-row">
+                {{ form.declaration }}
+                <label for="{{ form.declaration.id_for_label }}">I confirm that the information provided is correct and that I am authorized to submit this application.</label>
+            </div>
+            {{ form.declaration.errors }}
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn">Submit Application →</button>
+            <a href="{% url 'organization_login' %}" class="btn btn-secondary">Already Approved? Login</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

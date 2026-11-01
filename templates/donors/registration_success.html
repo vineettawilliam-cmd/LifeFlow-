@@ -1,0 +1,69 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Saved | LifeFlow</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff5f5;
+            margin: 0;
+        }
+
+        .success-card {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px 25px;
+            background: white;
+            text-align: center;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
+
+        .success-icon {
+            font-size: 65px;
+        }
+
+        h1 {
+            color: #c82333;
+        }
+
+        .next-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 25px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-card">
+    <div class="success-icon">❤️</div>
+    <h1>Donor Details Saved!</h1>
+
+    <p>
+        Your donor information has been successfully saved in LifeFlow.
+    </p>
+
+    <p>
+        The next step is to create your donor login account.
+    </p>
+
+    <p style="color:#777;">
+        Your donor account has not been created yet.
+    </p>
+
+    <a href="/" class="next-button">Back to Home</a>
+</div>
+
+</body>
+</html>

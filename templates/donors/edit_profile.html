@@ -1,0 +1,46 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | LifeFlow</title>
+    <link rel="stylesheet" href="{% static 'css/donor_dashboard.css' %}">
+    <style>
+        .form-row { margin: 17px 0; }
+        .form-row label { display: block; margin-bottom: 7px; font-weight: bold; }
+        .form-row input, .form-row select, .form-row textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+        }
+        .form-row input[type="checkbox"] { width: auto; }
+        .errorlist { color: #bd263f; }
+    </style>
+</head>
+<body>
+<main class="main">
+    <section class="panel">
+        <h2>Edit My Profile</h2>
+        <p>Update your donor information carefully.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-row">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+
+            <button class="primary-button" type="submit">Save Changes</button>
+            <a class="secondary-button" href="{% url 'donor_profile' %}">Cancel</a>
+        </form>
+    </section>
+</main>
+</body>
+</html>

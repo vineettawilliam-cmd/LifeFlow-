@@ -1,0 +1,191 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | LifeFlow</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f8f5f6;
+            color: #30333b;
+            font-family: Arial, sans-serif;
+        }
+
+        .page {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #a80032, #ed4264);
+            color: white;
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 { margin: 0 0 10px; }
+        .header p { margin: 0; opacity: .9; }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 18px;
+        }
+
+        .mark-btn {
+            background: #b00035;
+            color: white;
+            border: 0;
+            border-radius: 9px;
+            padding: 11px 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .notification {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #f0e3e8;
+            box-shadow: 0 3px 12px rgba(0,0,0,.04);
+            display: flex;
+            gap: 17px;
+            align-items: flex-start;
+        }
+
+        .notification.unread {
+            border-left: 5px solid #b00035;
+            background: #fffafb;
+        }
+
+        .notification-icon {
+            width: 45px;
+            height: 45px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #ffe8ee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .notification-content { flex: 1; }
+
+        .notification h3 {
+            margin: 0 0 8px;
+            color: #a80032;
+            font-size: 17px;
+        }
+
+        .notification p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0 0 10px;
+        }
+
+        .notification small { color: #999; }
+
+        .new-label {
+            display: inline-block;
+            background: #ffe1e8;
+            color: #b00035;
+            padding: 4px 9px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .empty {
+            text-align: center;
+            background: white;
+            padding: 55px 20px;
+            border-radius: 18px;
+        }
+
+        .empty .icon { font-size: 45px; }
+        .empty h2 { color: #a80032; }
+        .empty p { color: #777; }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #a80032;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media(max-width: 600px) {
+            .page { padding: 12px; }
+            .header { padding: 25px; }
+            .notification { padding: 17px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="page">
+
+    <div class="header">
+        <h1>🔔 Notifications</h1>
+        <p>Stay updated with important LifeFlow alerts and activities.</p>
+    </div>
+
+    {% if notifications %}
+        <div class="actions">
+            <form method="POST" action="{% url 'mark_all_notifications_read' %}">
+                {% csrf_token %}
+                <button class="mark-btn" type="submit">
+                    ✓ Mark All as Read
+                </button>
+            </form>
+        </div>
+
+        {% for notification in notifications %}
+            <div class="notification {% if not notification.is_read %}unread{% endif %}">
+
+                <div class="notification-icon">🔔</div>
+
+                <div class="notification-content">
+
+                    {% if not notification.is_read %}
+                        <span class="new-label">NEW</span>
+                    {% endif %}
+
+                    <h3>{{ notification.title }}</h3>
+
+                    <p>{{ notification.message }}</p>
+
+                    <small>
+                        {{ notification.created_at|date:"d M Y, h:i A" }}
+                    </small>
+
+                </div>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="empty">
+            <div class="icon">📭</div>
+            <h2>No Notifications Yet</h2>
+            <p>When there are updates for you, they will appear here.</p>
+        </div>
+    {% endif %}
+
+    <a href="{% url 'donor_dashboard' %}" class="back">
+        ← Back to Dashboard
+    </a>
+
+</div>
+</body>
+</html>

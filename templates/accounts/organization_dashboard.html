@@ -1,0 +1,69 @@
+{% extends 'accounts/organization_base.html' %}
+{% block title %}Organization Dashboard | LifeFlow{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <span class="eyebrow">Organization portal</span>
+    <h1>Welcome, {{ application.organization_name }}</h1>
+    <p class="subtitle">Manage your organization's LifeFlow activities from one place.</p>
+</div>
+
+<div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:25px;">
+        <div>
+            <h2 style="margin:0 0 6px;font:800 21px 'Manrope',sans-serif;">Organization Overview</h2>
+            <p style="margin:0;color:var(--muted);font-size:13px;">Your verified partner account</p>
+        </div>
+        <span class="status" style="background:#e8f8ef;color:#16734d;">Verified Partner</span>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card">
+            <small>Organization Type</small>
+            <strong>{{ application.get_organization_type_display }}</strong>
+        </div>
+        <div class="info-card">
+            <small>District</small>
+            <strong>{{ application.district }}</strong>
+        </div>
+        <div class="info-card">
+            <small>Official Email</small>
+            <strong>{{ application.email }}</strong>
+        </div>
+        <div class="info-card">
+            <small>Contact Number</small>
+            <strong>{{ application.phone }}</strong>
+        </div>
+    </div>
+
+    <h3 style="font:800 17px 'Manrope',sans-serif;margin:30px 0 15px;">Your Permissions</h3>
+    <div class="info-grid">
+        <div class="info-card">
+            <small>Blood Request Submission</small>
+            <strong>{% if application.request_blood_permission %}✓ Enabled{% else %}Not enabled{% endif %}</strong>
+        </div>
+        <div class="info-card">
+            <small>Camp Submission</small>
+            <strong>{% if application.submit_camp_permission %}✓ Enabled{% else %}Not enabled{% endif %}</strong>
+        </div>
+    </div>
+
+    <h3 style="font:800 17px 'Manrope',sans-serif;margin:30px 0 12px;">Organization Activities</h3>
+    <p style="color:var(--muted);font-size:14px;line-height:1.7;">
+        Your dashboard account is ready. Blood request and camp submission features will be connected in the next development phase and will be available according to the permissions approved by the admin.
+    </p>
+
+    <div class="actions">
+        {% if application.request_blood_permission %}
+            <button class="btn" type="button" disabled style="opacity:.55;cursor:not-allowed;">Blood Request Feature – Coming Next</button>
+        {% endif %}
+        {% if application.submit_camp_permission %}
+            <button class="btn btn-secondary" type="button" disabled style="opacity:.65;cursor:not-allowed;">Camp Submission – Coming Next</button>
+        {% endif %}
+        <form method="POST" action="{% url 'organization_logout' %}">
+            {% csrf_token %}
+            <button class="btn btn-secondary" type="submit">Logout</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

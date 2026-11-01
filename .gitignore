@@ -1,0 +1,12 @@
+﻿.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+.env.*
+!.env.example
+staticfiles/
+media/
+.DS_Store
+data/lifeflow_demo_donors_50.csv

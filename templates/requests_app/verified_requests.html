@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Verified Blood Requests | LifeFlow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff5f5;
+            margin: 0;
+            padding: 30px 15px;
+            color: #333;
+        }
+        .container { max-width: 1000px; margin: auto; }
+        h1 { color: #c62828; text-align: center; }
+        .intro { text-align: center; color: #666; margin-bottom: 25px; }
+        .request {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 15px #0000000c;
+            border-left: 5px solid #c62828;
+        }
+        .request h3 { color: #c62828; margin-top: 0; }
+        .details { line-height: 1.8; }
+        .tag {
+            display: inline-block;
+            background: #ffebee;
+            color: #b71c1c;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .empty {
+            background: white;
+            padding: 35px;
+            text-align: center;
+            border-radius: 12px;
+        }
+        a { color: #c62828; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Verified Blood Requests</h1>
+    <p class="intro">Help patients by connecting with verified blood requirements.</p>
+
+    {% for item in blood_requests %}
+        <div class="request">
+            <h3>{{ item.blood_group }} — {{ item.units_required }} unit(s)</h3>
+
+            <span class="tag">{{ item.request_type }}</span>
+            <span class="tag">{{ item.urgency }}</span>
+
+            <div class="details">
+                <p><strong>Hospital:</strong> {{ item.hospital_name }}</p>
+                <p><strong>Location:</strong> {{ item.city }}, {{ item.district }}</p>
+                <p><strong>Component:</strong> {{ item.get_component_display }}</p>
+                <p><strong>Required by:</strong>
+                    {% if item.required_by %}
+                        {{ item.required_by|date:"d M Y, h:i A" }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </p>
+                <p><strong>Reason:</strong> {{ item.reason|truncatewords:25 }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty">
+            <h3>No verified blood requests currently.</h3>
+            <p>Please check again later.</p>
+        </div>
+    {% endfor %}
+
+    <p><a href="/">← Back to Home</a></p>
+</div>
+</body>
+</html>

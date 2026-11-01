@@ -1,0 +1,373 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .ml-page {
+        padding: 12px 5px 35px;
+        max-width: 1250px;
+        margin: auto;
+    }
+
+    .ml-heading {
+        font-size: 27px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .ml-subtitle {
+        color: var(--body-quiet-color, #777);
+        margin-bottom: 24px;
+    }
+
+    .ml-notice {
+        padding: 15px 18px;
+        border-left: 5px solid #e09b26;
+        background: var(--darkened-bg, #f8f5ed);
+        border-radius: 8px;
+        margin-bottom: 22px;
+        line-height: 1.6;
+    }
+
+    .ml-section-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 28px 0 15px;
+    }
+
+    .ml-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .ml-card {
+        background: var(--body-bg, #fff);
+        border: 1px solid var(--border-color, #ddd);
+        border-radius: 11px;
+        padding: 19px;
+        box-shadow: 0 2px 9px rgba(0,0,0,.05);
+    }
+
+    .ml-card-label {
+        color: var(--body-quiet-color, #777);
+        font-size: 13px;
+        margin-bottom: 9px;
+    }
+
+    .ml-card-value {
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--body-fg, #333);
+    }
+
+    .ml-panel {
+        background: var(--body-bg, #fff);
+        border: 1px solid var(--border-color, #ddd);
+        border-radius: 11px;
+        padding: 18px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .ml-panel h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+    }
+
+    .ml-panel p {
+        color: var(--body-quiet-color, #777);
+        line-height: 1.5;
+    }
+
+    .ml-chart {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 6px;
+        margin-top: 12px;
+    }
+
+    .ml-chart-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 18px;
+    }
+
+    .ml-table-wrap {
+        overflow-x: auto;
+    }
+
+    .ml-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 570px;
+    }
+
+    .ml-table th,
+    .ml-table td {
+        padding: 12px;
+        border-bottom: 1px solid var(--border-color, #ddd);
+        text-align: left;
+    }
+
+    .ml-table th {
+        color: var(--body-quiet-color, #777);
+    }
+
+    .ml-back {
+        display: inline-block;
+        margin-bottom: 18px;
+        color: var(--link-fg, #417690);
+        font-weight: 600;
+    }
+
+    .ml-error {
+        padding: 15px;
+        border-radius: 8px;
+        background: var(--darkened-bg, #f5eeee);
+    }
+
+    @media (max-width: 600px) {
+        .ml-heading {
+            font-size: 22px;
+        }
+
+        .ml-chart-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="ml-page">
+
+    <a class="ml-back" href="{% url 'admin:index' %}">
+        ← Back to Admin Dashboard
+    </a>
+
+    <h1 class="ml-heading">ML & Dataset Analytics</h1>
+
+    <p class="ml-subtitle">
+        LifeFlow — AI-Based Blood Donation Prediction and Management System
+    </p>
+
+    {% if analytics_available %}
+
+        <div class="ml-notice">
+            <strong>Research note:</strong>
+            This experimental model is trained on the UCI Blood Transfusion
+            Service Center dataset. Its target represents whether a donor
+            donated blood in March 2007. It is not a medical assessment
+            or a guarantee of future donation.
+        </div>
+
+        <h2 class="ml-section-title">Selected Machine Learning Model</h2>
+
+        <div class="ml-cards">
+            <div class="ml-card">
+                <div class="ml-card-label">Selected Model</div>
+                <div class="ml-card-value">{{ model_name }}</div>
+            </div>
+
+            <div class="ml-card">
+                <div class="ml-card-label">Classification Threshold</div>
+                <div class="ml-card-value">
+                    {{ test_metrics.threshold|floatformat:2 }}
+                </div>
+            </div>
+
+            <div class="ml-card">
+                <div class="ml-card-label">Number of Input Features</div>
+                <div class="ml-card-value">{{ features|length }}</div>
+            </div>
+        </div>
+
+        <div class="ml-panel">
+            <h3>Features Used by the Model</h3>
+            <ul>
+                {% for feature in features %}
+                    <li>{{ feature }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <h2 class="ml-section-title">Cross-Validation Model Comparison</h2>
+
+        <div class="ml-panel">
+            <p>
+                Models were compared using Stratified Group 5-Fold
+                Cross-Validation. The Logistic Regression model was selected
+                based on its stronger F1 score and recall.
+            </p>
+
+            <div class="ml-table-wrap">
+                <table class="ml-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in cv_results %}
+                            <tr>
+                                <td><strong>{{ result.model }}</strong></td>
+                                <td>{{ result.accuracy|floatformat:4 }}</td>    
+                                <td>{{ result.precision|floatformat:4 }}</td>
+                                <td>{{ result.recall|floatformat:4 }}</td>
+                                <td>{{ result.f1_score|floatformat:4 }}</td>
+                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p>Metrics are shown as decimal values between 0 and 1.</p>
+        </div>
+
+        <h2 class="ml-section-title">Held-Out Test Results</h2>
+
+        <div class="ml-cards">
+            <div class="ml-card">
+                <div class="ml-card-label">Accuracy</div>
+                <div class="ml-card-value">
+                    {{ test_metrics.accuracy|floatformat:4 }}
+                </div>
+            </div>
+
+            <div class="ml-card">
+                <div class="ml-card-label">Precision</div>
+                <div class="ml-card-value">
+                    {{ test_metrics.precision|floatformat:4 }}
+                </div>
+            </div>
+
+            <div class="ml-card">
+                <div class="ml-card-label">Recall</div>
+                <div class="ml-card-value">
+                    {{ test_metrics.recall|floatformat:4 }}
+                </div>
+            </div>
+
+            <div class="ml-card">
+                <div class="ml-card-label">F1 Score</div>
+                <div class="ml-card-value">
+                    {{ test_metrics.f1_score|floatformat:4 }}
+                </div>
+            </div>
+        </div>
+
+        <div class="ml-notice">
+            The deployed threshold is 0.30, selected using training-only
+            out-of-fold predictions to prioritize high recall. On the
+            held-out test set, recall was 97.14%, but precision was only
+            28.57%. This produced 85 false positives and 1 false negative.
+            The threshold therefore favors identifying more potential
+            positive cases at the cost of many false alarms.
+        </div>
+
+        <h2 class="ml-section-title">Dataset Visualizations</h2>
+
+        <div class="ml-chart-grid">
+
+            <div class="ml-panel">
+                <h3>Target Class Distribution</h3>
+                <p>Distribution of positive and negative target classes.</p>
+                <img class="ml-chart"
+                     src="{% static 'ml_analytics/01_target_distribution.png' %}"
+                     alt="Target class distribution">
+            </div>
+
+            <div class="ml-panel">
+                <h3>Recency Distribution</h3>
+                <p>Distribution of time since the last donation.</p>
+                <img class="ml-chart"
+                     src="{% static 'ml_analytics/recency_months_distribution.png' %}"
+                     alt="Recency distribution">
+            </div>
+
+            <div class="ml-panel">
+                <h3>Frequency Distribution</h3>
+                <p>Distribution of previous donation frequency.</p>
+                <img class="ml-chart"
+                     src="{% static 'ml_analytics/frequency_times_distribution.png' %}"
+                     alt="Frequency distribution">
+            </div>
+
+            <div class="ml-panel">
+                <h3>Time Distribution</h3>
+                <p>Distribution of the donor's history duration.</p>
+                <img class="ml-chart"
+                     src="{% static 'ml_analytics/time_months_distribution.png' %}"
+                     alt="Time distribution">
+            </div>
+
+        </div>
+
+        <h2 class="ml-section-title">Model Evaluation Graphs</h2>
+
+        <div class="ml-chart-grid">
+
+            <div class="ml-panel">
+                <h3>Model Comparison</h3>
+                <p>Cross-validation performance of the two models.</p>
+                <img class="ml-chart"
+                     src="{% static 'ml_analytics/05_model_comparison.png' %}"
+                     alt="Model comparison">
+            </div>
+
+            <div class="ml-panel">
+                <h3>Confusion Matrix</h3>
+                <p>Held-out test predictions at threshold 0.30.</p>
+                <img class="ml-chart"
+                     src="{% static 'ml_analytics/06_confusion_matrix_030.png' %}"
+                     alt="Confusion matrix at threshold 0.30">
+            </div>
+
+            <div class="ml-panel">
+                <h3>Threshold Comparison</h3>
+                <p>Performance comparison at different classification thresholds.</p>
+                <img class="ml-chart"
+                     src="{% static 'ml_analytics/07_threshold_comparison.png' %}"
+                     alt="Threshold comparison">
+            </div>
+
+        </div>
+
+        <h2 class="ml-section-title">Threshold Selection Details</h2>
+
+        <div class="ml-panel">
+            <p>
+                <strong>Threshold:</strong>
+                {{ threshold_data.threshold|floatformat:2 }}
+            </p>
+            <p>
+                <strong>Minimum recall target:</strong>
+                {{ threshold_data.minimum_recall_target|floatformat:2 }}
+            </p>
+            <p>
+                <strong>Selection method:</strong>
+                {{ threshold_data.selection_method }}
+            </p>
+            <p>
+                <strong>Priority:</strong>
+                {{ threshold_data.priority }}
+            </p>
+        </div>
+
+    {% else %}
+
+        <div class="ml-error">
+            {{ analytics_error|default:"Analytics results are currently unavailable." }}
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

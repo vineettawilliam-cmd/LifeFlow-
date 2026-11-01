@@ -1,0 +1,28 @@
+{% extends 'accounts/organization_base.html' %}
+{% block title %}Organization Login | LifeFlow{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <span class="eyebrow">Verified partners</span>
+    <h1>Organization Login</h1>
+    <p class="subtitle">Sign in to access your hospital or organization dashboard.</p>
+</div>
+
+<div class="panel" style="max-width:480px;margin:auto;">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="field" style="margin-bottom:18px;">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="username">
+        </div>
+        <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+        <div class="actions">
+            <button type="submit" class="btn" style="width:100%;">Login →</button>
+        </div>
+    </form>
+    <p class="help" style="text-align:center;margin-top:20px;">Not approved yet? <a href="{% url 'organization_apply' %}" style="color:var(--red);font-weight:700;">Apply as an Organization</a></p>
+</div>
+{% endblock %}

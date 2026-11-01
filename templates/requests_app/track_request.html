@@ -1,0 +1,249 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Blood Request | LifeFlow</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        body {
+            margin: 0;
+            background: #fff7f7;
+            font-family: 'DM Sans', sans-serif;
+            color: #292929;
+        }
+
+        .track-container {
+            max-width: 650px;
+            margin: 55px auto;
+            padding: 20px;
+        }
+
+        .track-card {
+            background: white;
+            padding: 32px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.07);
+        }
+
+        h1 {
+            color: #c91f35;
+            margin-bottom: 8px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin: 20px 0 8px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        .track-button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: 0;
+            border-radius: 9px;
+            background: #d62839;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .track-button:hover {
+            background: #a91629;
+        }
+
+        .error {
+            background: #ffe6e8;
+            color: #b00020;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+        .result {
+            margin-top: 28px;
+            padding: 22px;
+            background: #fff8f8;
+            border: 1px solid #f1d5d8;
+            border-radius: 12px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #ffe5e8;
+            color: #c91f35;
+            font-weight: 800;
+        }
+
+        .detail {
+            margin: 13px 0;
+            line-height: 1.5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #c91f35;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .remarks {
+            background: #fff0d8;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="track-container">
+
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <div class="track-card">
+        <h1>Track Your Blood Request</h1>
+
+        <p>Enter your request reference ID and the mobile number used during submission.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="reference_code">Request Reference ID</label>
+            <input
+                type="text"
+                id="reference_code"
+                name="reference_code"
+                placeholder="Enter your reference ID"
+                value="{{ request.POST.reference_code|default:'' }}"
+                required
+            >
+
+            <label for="mobile_number">Registered Mobile Number</label>
+            <input
+                type="tel"
+                id="mobile_number"
+                name="mobile_number"
+                placeholder="Enter your mobile number"
+                value="{{ request.POST.mobile_number|default:'' }}"
+                required
+            >
+
+            <button type="submit" class="track-button">
+                Track My Request →
+            </button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if blood_request %}
+            <div class="result">
+
+                <h2>Request Details</h2>
+
+                <p>
+                    <strong>Reference ID:</strong>
+                    {{ blood_request.reference_code }}
+                </p>
+
+                <p class="detail">
+                    <strong>Request Type:</strong>
+                    {{ blood_request.get_request_type_display }}
+                </p>
+
+                <p class="detail">
+                    <strong>Blood Group:</strong>
+                    {{ blood_request.blood_group }}
+                </p>
+
+                <p class="detail">
+                    <strong>Units Required:</strong>
+                    {{ blood_request.units_required }}
+                </p>
+
+                <p class="detail">
+                    <strong>Hospital:</strong>
+                    {{ blood_request.hospital_name }}
+                </p>
+
+                <p class="detail">
+                    <strong>Bystander Contact:</strong>
+                    <a href="tel:{{ blood_request.bystander_contact }}">
+                        {{ blood_request.bystander_contact }}
+                    </a>
+                </p>
+
+                {% if blood_request.alternate_contact %}
+                <p class="detail">
+                    <strong>Alternate Contact:</strong>
+                    <a href="tel:{{ blood_request.alternate_contact }}">
+                        {{ blood_request.alternate_contact }}
+                    </a>
+                </p>
+                {% endif %}
+
+                <p class="detail">
+                    <strong>Location:</strong>
+                    {{ blood_request.city }}, {{ blood_request.district }}
+                </p>
+
+                <p class="detail">
+                    <strong>Urgency:</strong>
+                    {{ blood_request.get_urgency_display }}
+                </p>
+
+                <p class="detail">
+                    <strong>Submitted:</strong>
+                    {{ blood_request.created_at|date:"d M Y, h:i A" }}
+                </p>
+
+                <p class="detail">
+                    <strong>Current Status:</strong>
+                    <span class="status">
+                        {{ blood_request.get_status_display }}
+                    </span>
+                </p>
+
+                {% if blood_request.admin_remarks %}
+                    <div class="remarks">
+                        <strong>Admin Remarks:</strong>
+                        <p>{{ blood_request.admin_remarks }}</p>
+                    </div>
+                {% endif %}
+
+                {% if blood_request.status == 'PENDING' %}
+                    <p>Your request is waiting for admin verification.</p>
+                {% elif blood_request.status == 'VERIFIED' %}
+                    <p>Your request has been approved. Please coordinate with the hospital.</p>
+                {% elif blood_request.status == 'REJECTED' %}
+                    <p>Your request was not approved. Please check the admin remarks.</p>
+                {% elif blood_request.status == 'COMPLETION_REVIEW' %}
+                    <p>Your completion confirmation is waiting for admin review.</p>
+                {% elif blood_request.status == 'COMPLETED' %}
+                    <p>Your blood request has been marked as completed. Thank you!</p>
+                {% endif %}
+
+            </div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
